@@ -1,0 +1,15 @@
+﻿<Window x:Class="JokesApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:JokesApp"
+        mc:Ignorable="d"
+        Title="Joke App" Height="474" Width="800">
+    <Grid>
+        <TextBox x:Name="_txtSearchString" HorizontalAlignment="Left" Margin="521,32,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="227" RenderTransformOrigin="0.498,0.494"/>
+        <Button x:Name="_btnGetRandomJoke" Content="Get A Random Joke" HorizontalAlignment="Left" Margin="41,31,0,0" VerticalAlignment="Top" Width="174" Click="_btnGetRandomJoke_Click"/>
+        <Button Content="Get Jokes With This Word" HorizontalAlignment="Left" Margin="275,31,0,0" VerticalAlignment="Top" Width="189" Click="Button_Click"/>
+        <TextBox x:Name="_txtDisplayJoke" HorizontalAlignment="Left" Margin="41,86,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="707" Height="321"/>
+    </Grid>
+</Window>
