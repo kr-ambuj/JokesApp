@@ -1,18 +1,10 @@
 ﻿using JokesApp.DataServices;
+using JokesApp.JokesModel;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace JokesApp
 {
@@ -28,14 +20,66 @@ namespace JokesApp
             DadJokes = new DadJokesClass();
         }
 
-        private void _btnGetRandomJoke_Click(object sender, RoutedEventArgs e)
+        private async void _btnGetRandomJoke_Click(object sender, RoutedEventArgs e)
         {
-            _txtDisplayJoke.Text = DadJokes.GetARandomJoke().Result;
+            _btnGetJokeWithSearchString.IsEnabled = false;
+            string result = await DadJokes.GetARandomJoke();
+            _txtDisplayJoke.Text = result;
+            _btnGetJokeWithSearchString.IsEnabled = true;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
+            _btnGetRandomJoke.IsEnabled = false;
+            string result = await DadJokes.GetJokesWithSearchString(_txtSearchString.Text);
+            if (!string.IsNullOrEmpty(_txtSearchString.Text))
+                result = result.Replace(_txtSearchString.Text, _txtSearchString.Text.ToUpper());
+            var jsonData = JsonConvert.DeserializeObject<JokeModelClass>(result);
 
+            string textData = ReformatData(jsonData);
+            _txtDisplayJoke.Text = textData;
+
+            _btnGetRandomJoke.IsEnabled = true;
+        }
+
+        private string ReformatData(JokeModelClass? jsonData)
+        {
+            List<string> shortJokeList = new List<string>();
+            List<string> mediumJokeList = new List<string>();
+            List<string> longJokeList = new List<string>();
+            foreach (var item in jsonData.Results)
+            {
+                int jokeLength = item.Joke.Split(' ').Length;
+                if (jokeLength < 10)
+                    shortJokeList.Add(item.Joke);
+                else if (jokeLength < 20)
+                    mediumJokeList.Add(item.Joke);
+                else
+                    longJokeList.Add(item.Joke);
+            }
+            StringBuilder sb = new StringBuilder();
+            if (shortJokeList.Count > 0)
+            {
+                sb.AppendLine("Short Jokes");
+                foreach (var item in shortJokeList)
+                    sb.AppendLine(item);
+            }
+            if (mediumJokeList.Count > 0)
+            {
+                sb.AppendLine("\nMedium Jokes");
+                foreach (var item in mediumJokeList)
+                    sb.AppendLine(item);
+            }
+            if (longJokeList.Count > 0)
+            {
+                sb.AppendLine("\nLong Jokes");
+                foreach (var item in longJokeList)
+                    sb.AppendLine(item);
+            }
+            shortJokeList.Clear();
+            mediumJokeList.Clear();
+            longJokeList.Clear();
+            return sb.ToString();
         }
     }
 }
