@@ -36,8 +36,13 @@ namespace JokesApp
                 result = result.Replace(_txtSearchString.Text, _txtSearchString.Text.ToUpper());
             var jsonData = JsonConvert.DeserializeObject<JokeModelClass>(result);
 
-            string textData = ReformatData(jsonData);
-            _txtDisplayJoke.Text = textData;
+            if (jsonData.TotalJokes == 0)
+                _txtDisplayJoke.Text = $"{jsonData.TotalJokes} jokes found from API.";
+            else
+            {
+                string textData = ReformatData(jsonData);
+                _txtDisplayJoke.Text = textData;
+            }
 
             _btnGetRandomJoke.IsEnabled = true;
         }

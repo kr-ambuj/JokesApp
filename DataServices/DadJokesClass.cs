@@ -13,24 +13,28 @@ namespace JokesApp.DataServices
 
         internal async Task<string> GetARandomJoke()
         {
-            var client = new HttpClient();
-            var request = new HttpRequestMessage(HttpMethod.Get, strJokeUrl);
-            request.Headers.Add("Accept", " text/plain");
-            request.Headers.Add("User-Agent", " JokesApp (https://github.com/kr-ambuj/repo)");
-            var response = await client.SendAsync(request);
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadAsStringAsync();
+            using (var client = new HttpClient())
+            {
+                var request = new HttpRequestMessage(HttpMethod.Get, strJokeUrl);
+                request.Headers.Add("Accept", " text/plain");
+                request.Headers.Add("User-Agent", " JokesApp (https://github.com/kr-ambuj/repo)");
+                var response = await client.SendAsync(request);
+                response.EnsureSuccessStatusCode();
+                return await response.Content.ReadAsStringAsync();
+            }                
         }
 
         internal async Task<string> GetJokesWithSearchString(string searchText)
         {
-            var client = new HttpClient();
-            var request = new HttpRequestMessage(HttpMethod.Get, $"{strJokeUrl}search?page=1&limit=30&term={searchText}");
-            request.Headers.Add("Accept", " application/json");
-            request.Headers.Add("User-Agent", " JokesApp (https://github.com/kr-ambuj/repo)");
-            var response = await client.SendAsync(request);
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadAsStringAsync();
+            using (var client = new HttpClient())
+            {
+                var request = new HttpRequestMessage(HttpMethod.Get, $"{strJokeUrl}search?page=1&limit=30&term={searchText}");
+                request.Headers.Add("Accept", " application/json");
+                request.Headers.Add("User-Agent", " JokesApp (https://github.com/kr-ambuj/repo)");
+                var response = await client.SendAsync(request);
+                response.EnsureSuccessStatusCode();
+                return await response.Content.ReadAsStringAsync();
+            }                
         }
     }
 }
